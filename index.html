@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Movie AI World Pro - Mobile Optimized</title>
+    <title>Movie AI World Pro - All-in-One AI Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
@@ -36,6 +36,9 @@
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #07090e; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 2px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -54,9 +57,10 @@
     </header>
 
     <div class="flex-1 flex flex-col lg:flex-row relative">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation (Mobile Drawer & Desktop Sidebar) -->
         <aside id="sidebarNav" class="fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out w-72 glass lg:static z-50 flex flex-col justify-between border-r border-slate-800">
             <div>
+                <!-- Brand Header (Desktop) -->
                 <div class="p-5 hidden lg:flex items-center justify-between border-b border-slate-800">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl premium-gradient flex items-center justify-center shadow-lg">
@@ -69,6 +73,7 @@
                     </div>
                 </div>
 
+                <!-- User Status Card -->
                 <div class="p-3.5 m-3 rounded-2xl bg-slate-900 border border-slate-800">
                     <div class="flex items-center justify-between mb-2">
                         <span id="roleBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Free Trial</span>
@@ -81,8 +86,13 @@
                         </div>
                         <button type="button" onclick="switchTab('pricing'); toggleMobileMenu();" class="px-3 py-1.5 rounded-lg premium-gradient text-xs font-bold text-white">+ ဝယ်ရန်</button>
                     </div>
+                    <div class="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
+                        <span>BYOK (ကိုယ်ပိုင် API):</span>
+                        <span id="byokIndicator" class="text-amber-400 font-semibold">မချိတ်ရသေး</span>
+                    </div>
                 </div>
 
+                <!-- Menu List (All Features Restored) -->
                 <nav class="p-3 space-y-1 text-xs font-medium text-slate-300 overflow-y-auto max-h-[calc(100vh-220px)]">
                     <p class="px-3 py-1 text-[10px] font-bold uppercase text-slate-500">AI Studio Tools</p>
                     <button type="button" onclick="switchTab('recap'); toggleMobileMenu();" id="nav-recap" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-slate-800/50 nav-active">
@@ -123,8 +133,10 @@
             </div>
         </aside>
 
+        <!-- Overlay -->
         <div id="menuOverlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden lg:hidden"></div>
 
+        <!-- Main Content Workspace -->
         <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
             <header class="glass sticky top-0 z-20 px-4 py-3.5 flex items-center justify-between border-b border-slate-800">
                 <div>
@@ -133,149 +145,111 @@
                 </div>
                 <div class="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
                     <button type="button" onclick="setQuality('720p')" id="q-720p" class="px-2 py-1 text-slate-300">720p</button>
-                    <button type="button" onclick="setQuality('1080p')" id="q-1080p" class="px-2 py-1 premium-gradient text-white shadow">1080p</button>
+                    <button type="button" onclick="setQuality('1080p')" id="q-1080p" class="px-2 py-1 premium-gradient text-white shadow rounded-lg">1080p</button>
                     <button type="button" onclick="setQuality('4K')" id="q-4K" class="px-2 py-1 text-amber-300">4K</button>
                 </div>
             </header>
 
             <div class="p-4 max-w-5xl w-full mx-auto space-y-6 pb-20">
+                
+                <!-- 1. Auto Movie Recap -->
                 <section id="tab-recap" class="tab-panel space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3">
                         <h3 class="font-bold text-sm text-indigo-300"><i class="fa-solid fa-film"></i> ရုပ်ရှင် ဗီဒီယို (သို့) ဇာတ်လမ်းအချက်အလက် ထည့်ရန်</h3>
                         <input id="recapTitle" type="text" placeholder="ဥပမာ - John Wick (သို့) Video URL..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white">
+                        <select id="recapStyle" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white">
+                            <option value="dramatic">စိတ်လှုပ်ရှားဖွယ်ရာ (Dramatic)</option>
+                            <option value="suspense">သည်းထိတ်ရင်ဖို (Suspense)</option>
+                            <option value="funny">ဟာသနှောသော ပုံစံ (Funny)</option>
+                        </select>
                         <textarea id="recapPrompt" rows="3" placeholder="အဓိက ပါဝင်စေချင်သော ဇာတ်ဝင်ခန်းများကို ရေးပါ..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white"></textarea>
                         <button type="button" onclick="executeAIFeature('Auto Movie Recap', '/api/recap')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white shadow">Auto Movie Recap ထုတ်မည် (1 Credit)</button>
                     </div>
                 </section>
 
+                <!-- 2. Photo to 10s Video -->
                 <section id="tab-video10s" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3">
                         <h3 class="font-bold text-sm text-pink-300"><i class="fa-solid fa-clapperboard"></i> ဓာတ်ပုံ နှင့် Prompt မှ ၁၀ စက္ကန့် AI Video</h3>
                         <input type="file" id="photoUpload10s" accept="image/*" class="w-full text-xs text-slate-400">
-                        <textarea id="video10sPrompt" rows="3" placeholder="Motion Prompt..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white"></textarea>
+                        <textarea id="video10sPrompt" rows="3" placeholder="Motion Prompt (e.g. Cinematic 3D animation)..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white"></textarea>
                         <button type="button" onclick="executeAIFeature('10s AI Video Generation', '/api/storyboard')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">10s AI Video ထုတ်မည် (1 Credit)</button>
                     </div>
                 </section>
 
+                <!-- 3. AI Voice Clone -->
                 <section id="tab-voice" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3">
-                        <h3 class="font-bold text-sm text-purple-300"><i class="fa-solid fa-microphone-lines"></i> AI Voice Clone</h3>
+                        <h3 class="font-bold text-sm text-purple-300"><i class="fa-solid fa-microphone-lines"></i> AI Voice Clone (အသံပွားခြင်း)</h3>
+                        <input type="file" accept="audio/*" class="w-full text-xs text-slate-400">
                         <textarea id="voiceText" rows="3" placeholder="အသံထွက်စေချင်သော စာသားများ..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white"></textarea>
-                        <button type="button" onclick="executeAIFeature('AI Voice Clone', '/api/recap')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">အသံဖိုင် ထုတ်လုပ်မည်</button>
+                        <button type="button" onclick="executeAIFeature('AI Voice Clone', '/api/recap')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">အသံဖိုင် ထုတ်လုပ်မည် (1 Credit)</button>
                     </div>
                 </section>
 
+                <!-- 4. Video Myanmar Translator -->
                 <section id="tab-translate" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3">
                         <h3 class="font-bold text-sm text-emerald-300"><i class="fa-solid fa-language"></i> Video မြန်မာဘာသာပြန်</h3>
-                        <input type="url" placeholder="Video URL..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white">
-                        <button type="button" onclick="executeAIFeature('Video Myanmar Translator', '/api/recap')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">မြန်မာဘာသာဖြင့် ပြောင်းမည်</button>
+                        <input type="url" placeholder="TikTok / YouTube Video URL..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white">
+                        <button type="button" onclick="executeAIFeature('Video Myanmar Translator', '/api/recap')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">မြန်မာဘာသာဖြင့် ပြောင်းမည် (1 Credit)</button>
                     </div>
                 </section>
 
+                <!-- 5. Video Subtitle & Logo Remover -->
                 <section id="tab-inpaint" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3">
                         <h3 class="font-bold text-sm text-amber-300"><i class="fa-solid fa-eraser"></i> Video စာသား/Logo ဖျောက်ရန်</h3>
-                        <button type="button" onclick="executeAIFeature('Auto Video Text/Logo Remover', '/api/storyboard')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">စာသားနှင့် Logo ဖျောက်မည်</button>
+                        <input type="file" accept="video/*" class="w-full text-xs text-slate-400">
+                        <button type="button" onclick="executeAIFeature('Auto Video Text/Logo Remover', '/api/storyboard')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">စာသားနှင့် Logo ဖျောက်မည် (1 Credit)</button>
                     </div>
                 </section>
 
+                <!-- 6. Unlimited AI Photo / Video Studio -->
                 <section id="tab-unlimited" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3">
-                        <h3 class="font-bold text-sm text-cyan-300"><i class="fa-solid fa-infinity"></i> အကန့်အသတ်မရှိ AI Studio</h3>
-                        <textarea id="unlimitedPrompt" rows="3" placeholder="Prompt..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white"></textarea>
+                        <h3 class="font-bold text-sm text-cyan-300"><i class="fa-solid fa-infinity"></i> အကန့်အသတ်မရှိ AI Photo & Video Studio</h3>
+                        <textarea id="unlimitedPrompt" rows="3" placeholder="3D Pixar style fruit character, 4K resolution..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white"></textarea>
                         <button type="button" onclick="executeAIFeature('Unlimited AI Media Generator', '/api/storyboard')" class="w-full py-3 rounded-xl premium-gradient font-bold text-xs text-white">AI ပုံ/ဗီဒီယို ထုတ်လုပ်မည်</button>
                     </div>
                 </section>
 
+                <!-- 7. BYOK (Bring Your Own Key) -->
                 <section id="tab-byok" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3 border border-yellow-500/30">
                         <h3 class="font-bold text-sm text-yellow-400"><i class="fa-solid fa-key"></i> ကိုယ်ပိုင် API Key (BYOK)</h3>
-                        <input id="userGeminiKey" type="password" placeholder="Gemini API Key..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <p class="text-[11px] text-slate-300">ကိုယ်ပိုင် API Key ထည့်ထားပါက Credit ကန့်သတ်ချက်မရှိဘဲ အလကား သုံးနိုင်ပါသည်။</p>
+                        <input id="userGeminiKey" type="password" placeholder="Gemini API Key (AIzaSy...)" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+                        <input id="userVideoKey" type="password" placeholder="Replicate / Fal.ai API Key..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
                         <button type="button" onclick="saveBYOK()" class="w-full py-2.5 rounded-xl bg-yellow-500 font-bold text-xs text-slate-950">API Key သိမ်းဆည်းမည်</button>
                     </div>
                 </section>
 
+                <!-- 8. Pricing Plans -->
                 <section id="tab-pricing" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 space-y-3 text-center">
-                        <h3 class="text-base font-extrabold text-white">ပက်ကေ့ချ်များ</h3>
-                        <button type="button" onclick="openPaymentModal('တစ်လစာ Pro', 250)" class="w-full py-2.5 rounded-xl premium-gradient font-bold text-xs text-white">တစ်လစာ ဝယ်ယူမည်</button>
+                        <h3 class="text-base font-extrabold text-white">အခကြေးငွေ ပက်ကေ့ချ်များ (Subscription Plans)</h3>
+                        <div class="grid grid-cols-1 gap-3 text-left">
+                            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                                <p class="text-xs font-bold text-indigo-400">တစ်ပတ်စာ (50 Credits) - 15,000 MMK</p>
+                                <button type="button" onclick="openPaymentModal('တစ်ပတ်စာ (Weekly - 15,000 MMK)', 50)" class="mt-2 w-full py-2 rounded-lg bg-indigo-600 text-xs font-bold text-white">ဝယ်ယူမည်</button>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900 border border-purple-500">
+                                <p class="text-xs font-bold text-purple-400">တစ်လစာ Pro (250 Credits + 4K) - 45,000 MMK</p>
+                                <button type="button" onclick="openPaymentModal('တစ်လစာ (Monthly Pro - 45,000 MMK)', 250)" class="mt-2 w-full py-2 rounded-lg premium-gradient text-xs font-bold text-white">ဝယ်ယူမည်</button>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+                                <p class="text-xs font-bold text-pink-400">တစ်နှစ်စာ VIP (3,500 Credits) - 350,000 MMK</p>
+                                <button type="button" onclick="openPaymentModal('တစ်နှစ်စာ (Yearly VIP - 350,000 MMK)', 3500)" class="mt-2 w-full py-2 rounded-lg bg-slate-800 text-xs font-bold text-white">ဝယ်ယူမည်</button>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
+                <!-- 9. Admin Panel -->
                 <section id="tab-admin" class="tab-panel hidden space-y-4">
                     <div class="glass rounded-2xl p-4 border border-rose-500/40 space-y-3">
                         <h3 class="font-bold text-sm text-rose-400">Owner Control Center</h3>
                         <input id="adminTargetUser" type="email" placeholder="User Email..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-                        <button type="button" onclick="adminGrantCredits()" class="w-full bg-emerald-600 text-white font-bold text-xs rounded-xl py-2">Credit ပေါင်းမည်</button>
-                    </div>
-                </section>
-
-                <section id="outputConsole" class="hidden glass rounded-2xl p-4 border border-indigo-500/40 space-y-2">
-                    <h4 class="font-bold text-xs text-indigo-300">AI Output Result</h4>
-                    <div id="outputContent" class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-200 whitespace-pre-wrap font-mono"></div>
-                </section>
-            </div>
-        </main>
-    </div>
-
-    <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="glass max-w-sm w-full rounded-2xl p-5 space-y-3">
-            <h3 class="font-bold text-sm text-white">Owner Access</h3>
-            <input id="ownerSecretInput" type="password" placeholder="Owner Secret Key (OWNER2026)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-            <button type="button" onclick="activateOwnerMode()" class="w-full py-2 rounded-xl bg-rose-600 font-bold text-xs text-white">Owner Mode ဖွင့်မည်</button>
-        </div>
-    </div>
-
-    <script>
-        const OWNER_SECRET = "OWNER2026";
-        let state = JSON.parse(localStorage.getItem('movieAiProState')) || {
-            role: 'user', credits: 1, freeTrialUsed: false, quality: '1080p', byok: { gemini: '', video: '' }
-        };
-
-        function saveState() {
-            localStorage.setItem('movieAiProState', JSON.stringify(state));
-            updateUI();
-        }
-
-        function updateUI() {
-            document.getElementById('creditDisplay').innerHTML = state.role === 'owner' ? '∞ <span class="text-[10px] text-rose-400">Unlimited</span>' : `${state.credits} <span class="text-[10px] text-emerald-400">Credits</span>`;
-            document.getElementById('roleBadge').textContent = state.role === 'owner' ? 'Owner' : 'Free Trial';
-            document.getElementById('modeText').textContent = state.role === 'owner' ? 'Owner' : 'User';
-            const adminNav = document.getElementById('nav-admin');
-            if(state.role === 'owner') {
-                adminNav.classList.remove('hidden');
-                adminNav.classList.add('flex');
-            } else {
-                adminNav.classList.add('hidden');
-                adminNav.classList.remove('flex');
-            }
-        }
-
-        function toggleMobileMenu() {
-            const sidebar = document.getElementById('sidebarNav');
-            const overlay = document.getElementById('menuOverlay');
-            if(sidebar) sidebar.classList.toggle('-translate-x-full');
-            if(overlay) overlay.classList.toggle('hidden');
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
-            const target = document.getElementById('tab-' + tabId);
-            if(target) target.classList.remove('hidden');
-            document.querySelectorAll('aside nav button').forEach(btn => btn.classList.remove('nav-active'));
-            const activeBtn = document.getElementById('nav-' + tabId);
-            if(activeBtn) activeBtn.classList.add('nav-active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function setQuality(q) {
-            state.quality = q;
-            ['720p', '1080p', '4K'].forEach(res => {
-                const btn = document.getElementById('q-' + res);
-                if(btn) btn.className = (res === q) ? "px-2 py-1 premium-gradient text-white shadow rounded-lg" : "px-2 py-1 text-slate-300";
-            });
-            saveState();
-        }
-
-        function exec
+                        <div class="flex gap-2">
+                            <input id="adminCreditAmount" type="number" valu
